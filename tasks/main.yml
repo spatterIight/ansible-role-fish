@@ -24,7 +24,6 @@
     owner: root
     group: root
     mode: "0750"
-  when: fish_configure_skel | bool
   tags: ansible-role-fish
 
 - name: Create /etc/skel McFly directory
@@ -35,7 +34,6 @@
     owner: root
     group: root
     mode: "0750"
-  when: fish_configure_skel | bool
   tags: ansible-role-fish
 
 - name: Touch the /etc/skel McFly fish_history file

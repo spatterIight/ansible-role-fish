@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: spatterlight <spatterlight@spatterlight.space>
+  role_name: fish
+  description: Ansible role to install and configure a Garuda Linux inspired fish shell
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  license: MIT
+  min_ansible_version: '2.1'
