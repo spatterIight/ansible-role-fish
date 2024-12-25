@@ -1,0 +1,90 @@
+---
+- name: Install Garuda fish packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - fish
+    - bat
+    - eza
+    - https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=fish-autopair
+    - curl -sS https://starship.rs/install.sh | sh
+    - https://gitlab.com/garuda-linux/pkgbuilds/-/blob/main/garuda-starship-prompt/PKGBUILD?ref_type=heads
+    - fzf
+    - tealdeer
+    - ugrep
+    - fonts-firacode
+  tags: ansible-role-fish
+
+- name: Create /etc/skel fish configuration directory
+  ansible.builtin.file:
+    path: "/etc/skel/{{ fish_configuration_directory }}"
+    state: directory
+    recurse: true
+    owner: root
+    group: root
+    mode: "0750"
+  when: fish_configure_skel | bool
+  tags: ansible-role-fish
+
+- name: Create /etc/skel McFly directory
+  ansible.builtin.file:
+    path: "/etc/skel/{{ fish_mcfly_directory }}"
+    state: directory
+    recurse: true
+    owner: root
+    group: root
+    mode: "0750"
+  when: fish_configure_skel | bool
+  tags: ansible-role-fish
+
+- name: Touch the /etc/skel McFly fish_history file
+  ansible.builtin,file:
+    path: "/etc/skel/{{ fish_mcfly_directory }}/fish_history"
+    state: touch
+    owner: root
+    group: root
+    mode: "0644"
+    modification_time: preserve
+    access_time: preserve
+  when: fish_configure_skel | bool
+  tags: ansible-role-fish
+
+# - name: Create users fish configuration directory
+#   ansible.builtin.file:
+#     path:
+#     state: directory
+#     recurse: true
+#     owner: root
+#     group: root
+#     mode: "0750"
+#   when: fish_configure_users | length > 0
+#   loop: "{{ fish_configure_users }}"
+#   tags: ansible-role-fish
+
+- name: Write config.fish to /etc/skel
+  ansible.builtin.copy:
+    src: config.fish
+    dest: "/etc/skel/{{ fish_configuration_directory }}/config.fish"
+    owner: root
+    group: root
+    mode: "0644"
+  tags: ansible-role-fish
+
+- name: Write done.fish to /etc/skel
+  ansible.builtin.copy:
+    src: done.fish
+    dest: "/etc/skel/{{ fish_configuration_directory }}/done.fish"
+    owner: root
+    group: root
+    mode: "0644"
+  tags: ansible-role-fish
+
+- name: Write garuda-fish-completions-update.service to /usr/lib/systemd/user
+  ansible.builtin.copy:
+    src: garuda-fish-completions-update.service
+    dest: "/usr/lib/systemd/user/garuda-fish-completions-update.service"
+    owner: root
+    group: root
+    mode: "0644"
+  tags: ansible-role-fish

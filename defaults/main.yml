@@ -1,0 +1,5 @@
+---
+fish_configuration_directory: ".config/fish"
+fish_mcfly_directory: ".local/share/fish"
+fish_configure_skel: true
+fish_configure_users: []
