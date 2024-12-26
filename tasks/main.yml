@@ -37,7 +37,7 @@
   tags: ansible-role-fish
 
 - name: Touch the /etc/skel McFly fish_history file
-  ansible.builtin,file:
+  ansible.builtin.file:
     path: "/etc/skel/{{ fish_mcfly_directory }}/fish_history"
     state: touch
     owner: root
