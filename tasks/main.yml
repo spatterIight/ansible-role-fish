@@ -10,7 +10,6 @@
   ansible.builtin.file:
     path: "/etc/skel/{{ fish_configuration_directory }}"
     state: directory
-    recurse: true
     owner: root
     group: root
     mode: "0750"
@@ -38,7 +37,6 @@
   ansible.builtin.file:
     path: "{{ path }}/.config/fish/{{ fish_configuration_directory }}"
     state: directory
-    recurse: true
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: "0750"
@@ -78,7 +76,6 @@
   ansible.builtin.file:
     path: "/etc/skel/{{ fish_mcfly_directory }}"
     state: directory
-    recurse: true
     owner: root
     group: root
     mode: "0750"
@@ -99,7 +96,6 @@
   ansible.builtin.file:
     path: "{{ path }}/{{ fish_mcfly_directory }}"
     state: directory
-    recurse: true
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: "0750"
@@ -179,23 +175,28 @@
     - _autopair_tab.fish
   tags: ansible-role-fish
 
-- name: Download Starship.rs install script
-  ansible.builtin.get_url:
-    url: https://starship.rs/install.sh
-    dest: /tmp/starship-install.sh
-    mode: '0755'
+- name: Check if Starship is already installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/starship
+  register: starship_stat
   tags: ansible-role-fish
 
-- name: Execute Starship.rs install script
-  ansible.builtin.command: /tmp/starship-install.sh --yes
-  args:
-    creates: /usr/local/bin/starship
-  tags: ansible-role-fish
+- name: Install Starship.rs if not already installed
+  block:
+    - name: Download Starship.rs install script
+      ansible.builtin.get_url:
+        url: https://starship.rs/install.sh
+        dest: /tmp/starship-install.sh
+        mode: '0755'
 
-- name: Clean up install script
-  ansible.builtin.file:
-    path: /tmp/starship-install.sh
-    state: absent
+    - name: Execute Starship.rs install script
+      ansible.builtin.command: /tmp/starship-install.sh --yes
+
+    - name: Clean up install script
+      ansible.builtin.file:
+        path: /tmp/starship-install.sh
+        state: absent
+  when: not starship_stat.stat.exists
   tags: ansible-role-fish
 
 - name: Set users default shell to fish
