@@ -1,4 +1,15 @@
 ---
+fish_packages:
+    - fish
+    - bat
+    - eza
+    - fzf
+    - tealdeer
+    - ugrep
+    - fonts-firacode
+    - curl
+
 fish_configuration_directory: ".config/fish"
 fish_mcfly_directory: ".local/share/fish"
+
 fish_configure_users: []
