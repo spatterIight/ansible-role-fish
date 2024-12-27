@@ -113,7 +113,7 @@ alias lt 'eza -aT --color=always --group-directories-first --icons' # tree listi
 alias l. 'eza -ald --color=always --group-directories-first --icons .*' # show only dotfiles
 
 # Replace some more things with better alternatives
-alias cat 'batcat --style header --style snip --style changes --style header'
+alias cat 'batcat --style header --style snip --style changes --style header --no-pager'
 if not test -x /usr/bin/yay; and test -x /usr/bin/paru
     alias yay 'paru'
 end
