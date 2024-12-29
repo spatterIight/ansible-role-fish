@@ -9,10 +9,9 @@
   tags: ansible-role-fish
 
 - name: Enable fish-completions-update service for users
+  changed_when: false
   ansible.builtin.systemd:
     name: fish-completions-update
     scope: global
     enabled: true
-    state: started
-    daemon_reload: true
   tags: ansible-role-fish
