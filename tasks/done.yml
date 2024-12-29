@@ -1,0 +1,23 @@
+---
+- name: Write done.fish to /etc/skel
+  ansible.builtin.copy:
+    src: done.fish
+    dest: "/etc/skel/{{ fish_configuration_directory }}/conf.d/done.fish"
+    owner: root
+    group: root
+    mode: "0644"
+  when: fish_setup_skel | bool
+  tags: ansible-role-fish
+
+- name: Write done.fish to users directory
+  ansible.builtin.copy:
+    src: done.fish
+    dest: "{{ dest_path }}/{{ fish_configuration_directory }}/conf.d/done.fish"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: "0644"
+  vars:
+    dest_path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+  when: fish_configure_users | length > 0
+  loop: "{{ fish_configure_users }}"
+  tags: ansible-role-fish

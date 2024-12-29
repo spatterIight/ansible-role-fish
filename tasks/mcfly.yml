@@ -1,0 +1,50 @@
+---
+- name: Create /etc/skel McFly directory
+  ansible.builtin.file:
+    path: "/etc/skel/{{ fish_mcfly_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+  when: fish_setup_skel | bool
+  tags: ansible-role-fish
+
+- name: Touch the /etc/skel McFly fish_history file
+  ansible.builtin.file:
+    path: "/etc/skel/{{ fish_mcfly_directory }}/fish_history"
+    state: touch
+    owner: root
+    group: root
+    mode: "0644"
+    modification_time: preserve
+    access_time: preserve
+  when: fish_setup_skel | bool
+  tags: ansible-role-fish
+
+- name: Create users McFly directory
+  ansible.builtin.file:
+    path: "{{ path }}/{{ fish_mcfly_directory }}"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: "0750"
+  vars:
+    path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+  when: fish_configure_users | length > 0
+  loop: "{{ fish_configure_users }}"
+  tags: ansible-role-fish
+
+- name: Touch the users McFly fish_history file
+  ansible.builtin.file:
+    path: "{{ path }}/{{ fish_mcfly_directory }}/fish_history"
+    state: touch
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: "0644"
+    modification_time: preserve
+    access_time: preserve
+  vars:
+    path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+  when: fish_configure_users | length > 0
+  loop: "{{ fish_configure_users }}"
+  tags: ansible-role-fish

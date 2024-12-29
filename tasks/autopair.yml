@@ -1,0 +1,60 @@
+---
+- name: Write autopair.fish to /etc/skel
+  ansible.builtin.copy:
+    src: autopair.fish
+    dest: "/etc/skel/{{ fish_configuration_directory }}/conf.d/autopair.fish"
+    owner: root
+    group: root
+    mode: "0644"
+  when: fish_setup_skel | bool
+  tags: ansible-role-fish
+
+- name: Write autopair functions to /etc/skel
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/skel/{{ fish_configuration_directory }}/functions/{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    autopair_files:
+      - _autopair_backspace.fish
+      - _autopair_insert_left.fish
+      - _autopair_insert_right.fish
+      - _autopair_insert_same.fish
+      - _autopair_tab.fish
+  when: fish_setup_skel | bool
+  loop: "{{ autopair_files }}"
+  tags: ansible-role-fish
+
+- name: Write autopair.fish to users directory
+  ansible.builtin.copy:
+    src: autopair.fish
+    dest: "{{ dest_path }}/{{ fish_configuration_directory }}/conf.d/autopair.fish"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: "0644"
+  vars:
+    dest_path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+  when: fish_configure_users | length > 0
+  loop: "{{ fish_configure_users }}"
+  tags: ansible-role-fish
+
+- name: Write autopair functions to users directory
+  ansible.builtin.copy:
+    src: "{{ item.1 }}"
+    dest: "{{ dest_path }}/{{ fish_configuration_directory }}/functions/{{ item.1 }}"
+    owner: "{{ item.0 }}"
+    group: "{{ item.0 }}"
+    mode: "0644"
+  vars:
+    dest_path: "{{ '/root' if item.0 == 'root' else '/home/' + item.0 }}"
+    autopair_files:
+      - _autopair_backspace.fish
+      - _autopair_insert_left.fish
+      - _autopair_insert_right.fish
+      - _autopair_insert_same.fish
+      - _autopair_tab.fish
+  loop: "{{ fish_configure_users | product(autopair_files) | list }}"
+  when: fish_configure_users | length > 0
+  tags: ansible-role-fish

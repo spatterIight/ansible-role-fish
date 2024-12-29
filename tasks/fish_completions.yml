@@ -1,0 +1,9 @@
+---
+- name: Write fish-completions-update.service to /usr/lib/systemd/user
+  ansible.builtin.copy:
+    src: fish-completions-update.service
+    dest: "/usr/lib/systemd/user/fish-completions-update.service"
+    owner: root
+    group: root
+    mode: "0644"
+  tags: ansible-role-fish
