@@ -48,3 +48,24 @@
   when: fish_configure_users | length > 0
   loop: "{{ fish_configure_users }}"
   tags: ansible-role-fish
+
+# TO-DO -> Improve this to be more robust (version checks?)
+
+- name: Check if Mcfly is already installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/mcfly
+  register: mcfly_stat
+  tags: ansible-role-fish
+
+- name: Install Starship.rs if not already installed
+  block:
+    - name: Download Mcfly install script v0.9.2
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/cantino/mcfly/refs/tags/v0.9.2/ci/install.sh
+        dest: /tmp/mcfly-install.sh
+        mode: '0755'
+
+    - name: Execute Mcfly install script
+      ansible.builtin.command: /tmp/mcfly-install.sh --git cantino/mcfly
+  when: not mcfly_stat.stat.exists
+  tags: ansible-role-fish

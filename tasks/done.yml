@@ -1,23 +1,42 @@
 ---
-- name: Write done.fish to /etc/skel
-  ansible.builtin.copy:
-    src: done.fish
-    dest: "/etc/skel/{{ fish_configuration_directory }}/conf.d/done.fish"
-    owner: root
-    group: root
-    mode: "0644"
-  when: fish_setup_skel | bool
+# TO-DO -> Improve this file to be more robust (idempotency, version checks?)
+#          Current idempotency does not survive a reboot
+
+- name: Check if done.fish is already installed
+  ansible.builtin.stat:
+    path: /tmp/done.fish
+  register: done_stat
   tags: ansible-role-fish
 
-- name: Write done.fish to users directory
-  ansible.builtin.copy:
-    src: done.fish
-    dest: "{{ dest_path }}/{{ fish_configuration_directory }}/conf.d/done.fish"
-    owner: "{{ item }}"
-    group: "{{ item }}"
-    mode: "0644"
-  vars:
-    dest_path: "{{ '/root' if item == 'root' else '/home/' + item }}"
-  when: fish_configure_users | length > 0
-  loop: "{{ fish_configure_users }}"
+- name: Install done.fish if not already installed
+  block:
+    - name: Download done.fish file v1.19.3
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/franciscolourenco/done/refs/tags/1.19.3/conf.d/done.fish
+        dest: /tmp/done.fish
+        mode: '0755'
+
+    - name: Write done.fish to /etc/skel
+      ansible.builtin.copy:
+        src: /tmp/done.fish
+        dest: "/etc/skel/{{ fish_configuration_directory }}/conf.d/done.fish"
+        owner: root
+        group: root
+        mode: "0644"
+        remote_src: true
+      when: fish_setup_skel | bool
+
+    - name: Write done.fish to users directory
+      ansible.builtin.copy:
+        src: /tmp/done.fish
+        dest: "{{ dest_path }}/{{ fish_configuration_directory }}/conf.d/done.fish"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: "0644"
+        remote_src: true
+      vars:
+        dest_path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+      when: fish_configure_users | length > 0
+      loop: "{{ fish_configure_users }}"
+  when: not done_stat.stat.exists
   tags: ansible-role-fish

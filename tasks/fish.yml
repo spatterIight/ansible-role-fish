@@ -27,8 +27,8 @@
   tags: ansible-role-fish
 
 - name: Write config.fish to /etc/skel
-  ansible.builtin.copy:
-    src: config.fish
+  ansible.builtin.template:
+    src: config.fish.j2
     dest: "/etc/skel/{{ fish_configuration_directory }}/config.fish"
     owner: root
     group: root
@@ -63,8 +63,8 @@
   tags: ansible-role-fish
 
 - name: Write config.fish to users directory
-  ansible.builtin.copy:
-    src: config.fish
+  ansible.builtin.template:
+    src: config.fish.j2
     dest: "{{ dest_path }}/{{ fish_configuration_directory }}/config.fish"
     owner: "{{ item }}"
     group: "{{ item }}"

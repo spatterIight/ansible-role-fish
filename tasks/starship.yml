@@ -22,6 +22,8 @@
   loop: "{{ fish_configure_users }}"
   tags: ansible-role-fish
 
+# TO-DO -> Improve this to be more robust (version checks?)
+
 - name: Check if Starship is already installed
   ansible.builtin.stat:
     path: /usr/local/bin/starship
