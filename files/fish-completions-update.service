@@ -7,3 +7,6 @@ ExecStart=fish -c fish_update_completions
 Nice=19
 IOSchedulingClass=idle
 IOSchedulingPriority=7
+
+[Install]
+WantedBy=default.target
