@@ -1,0 +1,19 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    fish_setup_mcfly: false
+    fish_configure_users:
+      - ubuntu
+
+  tasks:
+    - name: Assert SHELL environment variable is set to fish shell
+      become: true
+      become_user: "{{ item }}"
+      ansible.builtin.assert:
+        that: lookup('ansible.builtin.env', 'SHELL') == '/usr/bin/fish'
+        fail_msg: "SHELL environment variable is not set to /usr/bin/fish. Current value: {{ lookup('ansible.builtin.env', 'SHELL') }}"
+        success_msg: "SHELL environment variable is correctly set to /usr/bin/fish"
+      loop: "{{ fish_configure_users }}"

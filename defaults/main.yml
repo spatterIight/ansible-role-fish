@@ -1,0 +1,23 @@
+---
+fish_setup_skel: true
+fish_setup_update_completions_service: true
+fish_setup_done: true
+fish_setup_mcfly: true
+fish_setup_starship: true
+fish_setup_autopair: true
+fish_setup_users_default_shell: true
+
+fish_packages:
+    - fish
+    - bat
+    - eza
+    - fzf
+    - tealdeer
+    - ugrep
+    - fonts-firacode
+    - curl
+
+fish_configuration_directory: ".config/fish"
+fish_mcfly_directory: ".local/share/fish"
+
+fish_configure_users: []

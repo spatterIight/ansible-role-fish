@@ -1,0 +1,84 @@
+---
+- name: Install fish packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ fish_packages }}"
+  tags: ansible-role-fish
+
+- name: Create /etc/skel fish configuration directory
+  ansible.builtin.file:
+    path: "/etc/skel/{{ fish_configuration_directory }}/conf.d"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+  when: fish_setup_skel | bool
+  tags: ansible-role-fish
+
+- name: Create /etc/skel fish configuration directory
+  ansible.builtin.file:
+    path: "/etc/skel/{{ fish_configuration_directory }}/functions"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+  when: fish_setup_skel | bool
+  tags: ansible-role-fish
+
+- name: Write config.fish to /etc/skel
+  ansible.builtin.template:
+    src: config.fish.j2
+    dest: "/etc/skel/{{ fish_configuration_directory }}/config.fish"
+    owner: root
+    group: root
+    mode: "0644"
+  when: fish_setup_skel | bool
+  tags: ansible-role-fish
+
+- name: Create users fish configuration directory
+  ansible.builtin.file:
+    path: "{{ path }}/{{ fish_configuration_directory }}/conf.d"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: "0750"
+  vars:
+    path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+  when: fish_configure_users | length > 0
+  loop: "{{ fish_configure_users }}"
+  tags: ansible-role-fish
+
+- name: Create users fish configuration directory
+  ansible.builtin.file:
+    path: "{{ path }}/{{ fish_configuration_directory }}/functions"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: "0750"
+  vars:
+    path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+  when: fish_configure_users | length > 0
+  loop: "{{ fish_configure_users }}"
+  tags: ansible-role-fish
+
+- name: Write config.fish to users directory
+  ansible.builtin.template:
+    src: config.fish.j2
+    dest: "{{ dest_path }}/{{ fish_configuration_directory }}/config.fish"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: "0644"
+  vars:
+    dest_path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+  when: fish_configure_users | length > 0
+  loop: "{{ fish_configure_users }}"
+  tags: ansible-role-fish
+
+- name: Set users default shell to fish
+  ansible.builtin.user:
+    name: "{{ item }}"
+    shell: /bin/fish
+  when: (fish_configure_users | length > 0) and (fish_setup_users_default_shell | bool)
+  loop: "{{ fish_configure_users }}"
+  tags: ansible-role-fish

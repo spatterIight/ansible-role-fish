@@ -1,0 +1,20 @@
+---
+- tags:
+    - ansible-role-fish
+  block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/fish.yml"
+
+    - when: fish_setup_update_completions_service | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/fish_completions.yml"
+
+    - when: fish_setup_done | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/done.yml"
+
+    - when: fish_setup_mcfly | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/mcfly.yml"
+
+    - when: fish_setup_starship | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/starship.yml"
+
+    - when: fish_setup_autopair | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/autopair.yml"
