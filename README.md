@@ -31,3 +31,11 @@ fish_setup_users_default_shell: true
 fish_configure_users:
   - ubuntu
 ```
+
+## Running the role locally
+
+To run the role locally, without much hassle, an playbook in the files directory can be used with the following command:
+
+```sh
+ansible-playbook -i "localhost," ./files/playbook.yml --ask-become-pass
+```
