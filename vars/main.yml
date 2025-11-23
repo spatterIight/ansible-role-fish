@@ -1,0 +1,10 @@
+---
+path: "{{ '/root' if item == 'root' else '/home/' + item }}"
+path_0: "{{ '/root' if item.0 == 'root' else '/home/' + item.0 }}"
+
+autopair_files:
+  - _autopair_backspace.fish
+  - _autopair_insert_left.fish
+  - _autopair_insert_right.fish
+  - _autopair_insert_same.fish
+  - _autopair_tab.fish

@@ -1,3 +1,5 @@
+# https://gitlab.com/garuda-linux/pkgbuilds/-/blob/cb127a3aa0500eb29823de96751cca469d6421a8/garuda-starship-prompt/starship.toml
+
 ## FIRST LINE/ROW: Info & Status
 # First param ─┌
 [username]

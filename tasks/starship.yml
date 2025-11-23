@@ -7,20 +7,16 @@
     group: root
     mode: "0644"
   when: fish_setup_skel | bool
-  tags: ansible-role-fish
 
 - name: Write starship.toml to users directory
   ansible.builtin.copy:
     src: starship.toml
-    dest: "{{ dest_path }}/.config/starship.toml"
+    dest: "{{ path }}/.config/starship.toml"
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: "0644"
-  vars:
-    dest_path: "{{ '/root' if item == 'root' else '/home/' + item }}"
   when: fish_configure_users | length > 0
   loop: "{{ fish_configure_users }}"
-  tags: ansible-role-fish
 
 # TO-DO -> Improve this to be more robust (version checks?)
 
@@ -28,7 +24,6 @@
   ansible.builtin.stat:
     path: /usr/local/bin/starship
   register: starship_stat
-  tags: ansible-role-fish
 
 - name: Install Starship.rs if not already installed
   block:
@@ -41,4 +36,3 @@
     - name: Execute Starship.rs install script
       ansible.builtin.command: /tmp/starship-install.sh --yes
   when: not starship_stat.stat.exists
-  tags: ansible-role-fish

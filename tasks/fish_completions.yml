@@ -6,7 +6,6 @@
     owner: root
     group: root
     mode: "0644"
-  tags: ansible-role-fish
 
 - name: Enable fish-completions-update service for users
   changed_when: false
@@ -14,4 +13,3 @@
     name: fish-completions-update
     scope: global
     enabled: true
-  tags: ansible-role-fish

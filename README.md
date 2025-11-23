@@ -1,8 +1,14 @@
-# ansible-role-tinc
+# ansible-role-fish
 
 ## What it is
 
-Installs and configures a [Garuda linux](https://garudalinux.org/) style [Fish shell](https://fishshell.com/) on Ubuntu 24.
+Installs and configures a [Garuda linux](https://garudalinux.org/) style [Fish shell](https://fishshell.com/).
+
+## Supported distributions
+
+This role has been tested as working on the following Linux distributions:
+  - Ubuntu 25.10 (Questing Quokka)
+  - Ubuntu 24.04 (Noble Numbat)
 
 ## Features
 
@@ -39,3 +45,7 @@ To run the role locally, without much hassle, an playbook in the files directory
 ```sh
 ansible-playbook -i "localhost," ./files/playbook.yml --ask-become-pass
 ```
+
+## Testing with Molecule
+
+See [molecule/README.md](molecule/README.md)

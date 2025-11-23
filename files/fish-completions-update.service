@@ -1,3 +1,5 @@
+# https://gitlab.com/garuda-linux/pkgbuilds/-/blob/cb127a3aa0500eb29823de96751cca469d6421a8/garuda-fish-config/garuda-fish-completions-update.service
+
 [Unit]
 Description=Updates fish completions
 

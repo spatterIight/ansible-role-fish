@@ -4,17 +4,6 @@
   connection: local
   become: true
   gather_facts: true
-  vars:
-    fish_setup_skel: true
-    fish_setup_update_completions_service: true
-    fish_setup_done: true
-    fish_setup_mcfly: false
-    fish_setup_starship: true
-    fish_setup_autopair: true
-    fish_setup_users_default_shell: true
-    fish_configure_users:
-      - x1
-      - root
   tasks:
     - name: Include fish role
       ansible.builtin.include_role:
