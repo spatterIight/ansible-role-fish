@@ -7,7 +7,7 @@ set VIRTUAL_ENV_DISABLE_PROMPT "1"
 set -x SHELL /usr/bin/fish
 
 # Use bat for man pages
-set -xU MANPAGER "sh -c 'col -bx | bat -l man -p'"
+set -xU MANPAGER "sh -c 'col -bx | batcat -l man -p'"
 set -xU MANROFFOPT "-c"
 
 # Set settings for https://github.com/franciscolourenco/done
